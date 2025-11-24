@@ -1,0 +1,106 @@
+@startuml
+' Standard UML for Class Diagrams
+' We don't need C4_Container include for this specific class-based view
+
+title CMS Domain/Component Model - Core Entities
+
+' Helper Class: Complaint (The central entity managed by the system)
+class Complaint {
+  - id: int
+  - problemDescription: string
+  - status: string {enum: Logged, Assigned, In Progress, Resolved, Closed}
+  - loggedDate: LocalDate
+  - assignedTo: SupportPersonId
+  - resolutionNotes: string
+  - tenantId: int ' Mandatory for multi-tenancy
+  -- Methods --
+  + updateStatus(newStatus): boolean
+  + attachResolutionNotes(notes): void
+  + updateAssignment(supportPersonId): void
+  + calculateResolutionTime(): Duration
+}
+
+' ----------------------------------------------------
+' 1. External User Role (Consumer)
+' ----------------------------------------------------
+class Consumer {
+  - id: int
+  - name: string
+  - email: string
+  - dateOfBirth: LocalDate
+  - preferredContactMethod: string
+  -- Methods (Actions on the System) --
+  + submitComplaint(details): Complaint
+  + getComplaintStatus(complaintId): string
+  + provideResolutionFeedback(complaintId, status): boolean
+}
+
+' ----------------------------------------------------
+' 2. Internal Staff Roles
+' ----------------------------------------------------
+
+class HelpDeskAgent {
+  - id: int
+  - name: string
+  - email: string
+  - telephoneNumber: long
+  -- Methods (Handles initial contact and triage) --
+  + logComplaintForConsumer(details, consumerId): Complaint
+  + provideSolutionOnSpot(complaintId, solution): boolean
+  + assignToSupportPerson(complaintId, supportPersonId): boolean
+  + updateConsumerStatus(complaintId): void
+}
+
+class SupportPerson {
+  - id: int
+  - name: string
+  - email: string
+  -- Methods (Handles specialized resolution) --
+  + resolveComplaint(complaintId, resolutionNotes): boolean
+  + updateProblemDetails(complaintId, internalNotes): void
+}
+
+class HelpDeskManager {
+  - id: int
+  - name: string
+  - email: string
+  -- Methods (Monitoring and Metrics) --
+  + monitorResolutionTime(period): Report
+  + monitorStaffPerformance(role, period): Report
+  + viewAllComplaints(status, tenantId): List<Complaint>
+}
+
+' ----------------------------------------------------
+' 3. Administrative Role
+' ----------------------------------------------------
+class SystemAdministrator {
+  - id: int
+  - name: string
+  - email: string
+  -- Methods (System-wide configuration) --
+  + onboardOrganization(orgDetails): boolean ' Multi-tenancy setup
+  + manageUserRoles(userId, privileges): boolean
+  + archiveOldComplaints(tenantId, date): boolean
+}
+
+' ----------------------------------------------------
+' 4. Relationships (Uses and Manages)
+' ----------------------------------------------------
+
+' Complaint is central to all actions
+Consumer ---> Complaint : logs / gets status of (1..*)
+HelpDeskAgent --> Complaint : creates / updates (1..*)
+SupportPerson --> Complaint : resolves / updates (1..*)
+HelpDeskManager --> Complaint : monitors (1..*)
+
+' Management/Assignment flow
+HelpDeskAgent --> SupportPerson : assigns to (1)
+HelpDeskManager -right-> HelpDeskAgent : monitors performance of (1..*)
+HelpDeskManager -up-> SupportPerson : monitors performance of (1..*)
+
+' System setup
+SystemAdministrator -up-> HelpDeskManager : configures roles for (1..*)
+SystemAdministrator -up-> HelpDeskAgent : configures roles for (1..*)
+SystemAdministrator -up-> SupportPerson : configures roles for (1..*)
+
+@enduml
