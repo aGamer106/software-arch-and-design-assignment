@@ -1,36 +1,22 @@
 package com.cms.assignment.consumer;
 
+import com.cms.assignment.appuser.User;
 import com.cms.assignment.complaint.Complaint;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public class Consumer {
+@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class Consumer extends User {
 
-    private int id;
+    private String phoneNumber;
 
-    private String name;
-
-    private String email;
-
-    private LocalDate dateOfBirth;
-
-    private enum preferredContactMethod {
-        PHONE,
-        EMAIL
-    }
-
-    public Complaint submitComplaint(String details) {
-        return null;
-    }
-
-    public String getComplaintStatus(int complaintId) {
-        return null;
-    }
-
-    public boolean provideResolutionFeedback(int complaintId, String status) {
-        return true;
-    }
-
-
+    @OneToMany
+    private List<Complaint> complaints;
 
 }
