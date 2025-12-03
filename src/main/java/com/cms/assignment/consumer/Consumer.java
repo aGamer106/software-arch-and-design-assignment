@@ -2,6 +2,7 @@ package com.cms.assignment.consumer;
 
 import com.cms.assignment.appuser.User;
 import com.cms.assignment.complaint.Complaint;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,8 @@ public class Consumer extends User {
 
     private String phoneNumber;
 
-    @OneToMany
+    @OneToMany(mappedBy = "consumer")
+    @JsonIgnore
     private List<Complaint> complaints;
 
 }
