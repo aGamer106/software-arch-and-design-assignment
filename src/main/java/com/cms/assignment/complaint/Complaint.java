@@ -2,6 +2,7 @@ package com.cms.assignment.complaint;
 
 import com.cms.assignment.ComplaintStatus;
 import com.cms.assignment.consumer.Consumer;
+import com.cms.assignment.helpdeskagent.HelpDeskAgent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,7 +29,12 @@ public class Complaint {
 
     @ManyToOne
     @JoinColumn(name = "consumer_id")
-    @JsonIgnore
+//    @JsonIgnore
     private Consumer consumer;
+
+    @ManyToOne
+    @JoinColumn(name = "agent_id")
+    @JsonIgnore
+    private HelpDeskAgent assignedAgent;
 
 }
