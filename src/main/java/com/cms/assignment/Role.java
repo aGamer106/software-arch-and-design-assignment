@@ -4,5 +4,6 @@ public enum Role {
     CONSUMER,
     HELP_DESK_AGENT,
     HELP_DESK_MANAGER,
-    ADMIN
+    ADMIN,
+    SUPPORT_PERSON
 }
