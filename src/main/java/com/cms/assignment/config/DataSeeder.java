@@ -33,22 +33,18 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // Only seed if the database is empty
         if (userRepository.count() == 0) {
             System.out.println("Seed: Database empty. Seeding initial data...");
 
-            // --- I'm force adding data in my database to test my work, passwords are encrypted successfully via BCrypt!
-            // --- 1. Create Consumer ---
             Consumer consumer = new Consumer();
             consumer.setName("Priya Sharma");
             consumer.setEmail("priya@example.com");
-            consumer.setPassword(passwordEncoder.encode("password123")); // ENCRYPTED
+            consumer.setPassword(passwordEncoder.encode("password123"));
             consumer.setRole(Role.CONSUMER);
             consumer.setPhoneNumber("07700900000");
 
             userRepository.save(consumer);
 
-            // --- 2. Create Complaints for Consumer ---
             Complaint c1 = new Complaint();
             c1.setTitle("Double Charge on Credit Card");
             c1.setDescription("I was charged twice for my transaction at Tesco yesterday.");
@@ -65,7 +61,6 @@ public class DataSeeder implements CommandLineRunner {
 
             complaintRepository.saveAll(List.of(c1, c2));
 
-            // --- 3. Create Help Desk Agent (HDA) ---
             HelpDeskAgent hda = new HelpDeskAgent();
             hda.setName("David Chen");
             hda.setEmail("david.agent@cms.com");
@@ -75,7 +70,6 @@ public class DataSeeder implements CommandLineRunner {
             hda.setDepartment("Level 1 Support");
             userRepository.save(hda);
 
-            // --- 4. Create Help Desk Manager (HDM) ---
             HelpDeskManager hdm = new HelpDeskManager();
             hdm.setName("Eddie Manager");
             hdm.setEmail("eddie.manager@cms.com");
@@ -83,15 +77,13 @@ public class DataSeeder implements CommandLineRunner {
             hdm.setRole(Role.HELP_DESK_MANAGER);
             userRepository.save(hdm);
 
-            // --- 5. Create Support Person (SP) ---
             SupportPerson sp = new SupportPerson();
             sp.setName("Sarah Tech");
             sp.setEmail("sarah.tech@cms.com");
             sp.setPassword(passwordEncoder.encode("support123"));
-            sp.setRole(Role.HELP_DESK_AGENT); // Or dedicated ROLE if you added one
+            sp.setRole(Role.HELP_DESK_AGENT);
             userRepository.save(sp);
 
-            // --- 6. Create System Admin (SA) ---
             SystemAdministrator sa = new SystemAdministrator();
             sa.setName("Amy Admin");
             sa.setEmail("amy.admin@cms.com");
