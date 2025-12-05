@@ -3,6 +3,7 @@ package com.cms.assignment.complaint;
 import com.cms.assignment.ComplaintStatus;
 import com.cms.assignment.appuser.UserRepository;
 import com.cms.assignment.consumer.Consumer;
+import com.cms.assignment.dto.AgentStatsDTO;
 import com.cms.assignment.helpdeskagent.HelpDeskAgent;
 import com.cms.assignment.complaint.ComplaintRepository;
 import com.cms.assignment.service.EmailService;
@@ -102,5 +103,11 @@ public class ComplaintController {
 
         return complaintRepository.save(complaint);
     }
+
+    @GetMapping("/manager/analytics")
+    public List<AgentStatsDTO> getAgentAnalytics() {
+        return complaintRepository.getAgentPerformanceStats();
+    }
+
 
 }
